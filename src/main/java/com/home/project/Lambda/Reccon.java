@@ -1,14 +1,14 @@
-package com.home.project.homeWork2;
+package com.home.project.Lambda;
 
-public class Dog {
+public class Reccon {
     String name;
     int age;
     int weight;
 
-    public Dog(final String name, final int age, final int weight){
+    public Reccon(final String name, final int age, final int weight){
         this.age = age;
         this.name = name;
         this.weight = weight;
     }
-
 }
+

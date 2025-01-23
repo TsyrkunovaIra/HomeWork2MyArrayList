@@ -1,4 +1,4 @@
-package com.home.project.homeWork2;
+package com.home.project.Lambda;
 
 import java.util.*;
 import java.util.function.*;
