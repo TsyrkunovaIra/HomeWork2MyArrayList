@@ -1,27 +1,22 @@
 package com.home.project.homeWork.HomeWork2;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public class MyArrayList {
-    /**
-     * пустой массив
-     */
-    private static final Object[] EMPTY_ELEMENT = {};
     /**
      * поле отвечающее за объем динамического массива по умолчанию равное 10 элементам
      */
     private static final int DEFAULT_CAPACITY = 10;
     /**
-     * поле отвечающие за храние всех элементов коллекции
+     * поле отвечающие за храние всех элементов коллекции.
+     * поле не задается вручную, а вычисляется программой и менятеся
+     * с ростом или уменьшением массива. поле не требует сериализации
      */
-    transient Object[] elements;
+    transient Object[] elements; // так же модификатор transient не допускает утечку информации
+    // за пределы JVM и упрощает доступ к вложенным классам так как не является приватным
     /**
      * поле, хранящее в себе количество действительно
-     * находящихся в массиве элементов.
-     * Значение поля меняется в слуяае изменения количества элементов массива.
+     * находящихся в массиве элементов
      */
     private int size;
     /**
@@ -31,7 +26,8 @@ public class MyArrayList {
         this.elements = new Object[DEFAULT_CAPACITY];
     }
     /**
-     * конструктор создающий списочный массив имеющий началную емкость.
+     * конструктор создающий списочный массив имеющий началную
+     * емкость заданную пользавателем.
      * если начальная емкость (initialCapacity) больше или равно 0,
      * то создается новый массив указанного размера.
      * Если initialCapacity меньше 0, то генерируется исключение
@@ -41,22 +37,7 @@ public class MyArrayList {
         if (initialCapacity >= 0) {
             this.elements = new Object[initialCapacity];
         } else {
-            throw new IllegalStateException("Начальная емкость (initialCapacity) не может быть меньше нуля");
-        }
-    }
-
-    /**
-     * конструктор для создания ArrayList
-     * на основе коллекции переданной в конструтор
-     */
-    public MyArrayList(Collection<Object> objectList) {
-        elements = objectList.toArray();
-        if ((size = elements.length) != 0) {
-            if (objectList.getClass() != ArrayList.class) {
-                elements = Arrays.copyOf(elements, size, Object[].class);
-            } else {
-                elements = EMPTY_ELEMENT;
-            }
+            throw new IllegalStateException("Начальная емкость (initialCapacity) не может быть меньше или равен нулю");
         }
     }
     /**
@@ -65,10 +46,9 @@ public class MyArrayList {
     private int size() {
         return size;
     }
-
     /**
-     * метод увеличения емкости массива, что гарантирует что она может содержать
-     * то количество элементов, которое указано в аргументе minCapacity.
+     * метод увеличения емкости массива, чтобы гарантировать, что она может содержать
+     * то количество элементов, которое указано в параметре minCapacity.
      * Если массив заполнен,
      * то срабатывает данный метод, в котором внутреннему массиву
      * присваивается ссылка на новый созданный массив, полученный в результате
@@ -83,7 +63,6 @@ public class MyArrayList {
         }else{
         return elements = new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
     }}
-
     /**
      * после увеличения размера массива в конец массива добовляется новый элемент,
      * а текуйщий парамент size увеличиваем на единицу
@@ -91,20 +70,22 @@ public class MyArrayList {
     private Object[] capacityGrowth() {
         return capacityGrowth(size + 1);
     }
-
     /**
-     * метод добовляет новый элемент в конец массива. если элемент добавлен возвращает true
+     * метод добавляет новый элемент в конец массива.
+     * внутри метода идет проверка на наличие в массиве места,
+     * если нет, то срабатывает метод расширения емкости capacityGrowth.
+     * если элемент добавлен возвращает true
      */
-    public boolean add(List<Object> objectList){
+    public boolean add(Object object){
         if (size == elements.length){
             elements = capacityGrowth();
         }
-        elements[size] = objectList;
+        elements[size] = object;
         size++;
         return true;
     }
     /**
-     * проверка корректности искомого индекса.
+     * метод проверка корректности искомого индекса.
      * указанный индекс не может быть больше чем текущее количество элементов массива
      * size или меньше 0
      */
@@ -121,19 +102,21 @@ public class MyArrayList {
             return "Количество элементов в массвие: " + size +"общий размер массива: "+ elements.length;
     }
     /**
-     * добавляем елемент с указанием индекса ячейки в которую хотим добавть
+     * добавляем элемент с указанием индекса ячейки
+     * в которую хотим добавть.
+     * проверяем наличие искомого элемента в массиве.
+     * вставоляем элемент, копируем последующие элементы вправо
      */
-    public void add(int index, List<Object>objectList){
+    public void add(int index, Object object){
         checkingIndex(index);
         final int i;
         Object[] elements;
         if ((i = size) == (elements = this.elements).length)
             elements = capacityGrowth();
         System.arraycopy(elements, index, elements, index+1, i-index); // увеличиваем массив, сдвигая его с помощью копирования
-        elements[index] = objectList;
+        elements[index] = object;
         size = i + 1;
     }
-
     /**
      * получаем элемент по индексу
      */
@@ -141,33 +124,40 @@ public class MyArrayList {
         checkingIndex(index);
         return elements[index];
     }
-
     /**
-     * удаление элемента по индексу
-
+     * удаление элемента по индексу.
+     * проверчем на наличие искомого элемента по индексу,
+     * удаляем элемент, путем копирования сдвигаем последующие элементы влево,
+     * затем уменьшаем массив на 1
      */
-
     public Object remove (int index){
          checkingIndex(index);
-         Object[] s = elements;
-         elements = new Object[s.length-1];
-         List<Object>objectList = (List<Object>) s[index];
-         System.arraycopy(s,0,elements,0,index);
-         System.arraycopy(s,index +1, elements, index,s.length);
+         Object[] objects = elements;
+         elements = new Object[objects.length-1];
+         Object object = objects[index];
+         System.arraycopy(objects,0,elements,0,index);
+         System.arraycopy(objects,index +1, elements, index,objects.length);
          size--;
-         return objectList;
-
+         return object;
+    }
+    /**
+     * удаляем все элементы из массива.
+     * в цикле проходимся по всем
+     * элементам массив, присваивая им null
+     */
+    public void clear(){
+        Object[] objects = elements;
+        for (int s = size, i =size = 0; i < s; i++)
+            objects[i]= null;
     }
 
+    /**
+     * сортируем элементы коллекции
+     */
+    public void sort(Comparator<Object> objectComparator) {
+        Arrays.sort(elements, 0, size, objectComparator);
 
-
-
-
-
-
-
-
-
+    }
 
 
 
