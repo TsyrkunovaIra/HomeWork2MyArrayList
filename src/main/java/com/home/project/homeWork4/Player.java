@@ -26,7 +26,6 @@ public class Player {
             this.location = location;
             this.userName = userName;
         }
-
         public Player registration() {
             return new Player(this);
         }
