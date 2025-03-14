@@ -4,6 +4,7 @@ public class Main {
     public static void main(String[] args) {
 
             Player user = new Player.PlayerBuilder("WorldGame", "Tim").registration();
+        System.out.println(user);
 
     }
 }

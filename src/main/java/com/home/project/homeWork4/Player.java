@@ -25,10 +25,13 @@ public class Player {
         public PlayerBuilder(String location, String userName){
             this.location = location;
             this.userName = userName;
+
         }
         public Player registration() {
             return new Player(this);
         }
+
+
     }
 }
 
