@@ -37,6 +37,8 @@ public class LambdaSteam {
         nameList.add("dfdb");
         nameList.add("dfv");
         nameList.add("bffd");
+        Stream stream = nameList.stream();
+        stream.filter(x -> x.toString().length() == 3).forEach(System.out::println);
 
         Supplier<String> randomName = () -> {
             int value = (int)(Math.random() * nameList.size());
@@ -76,6 +78,12 @@ public class LambdaSteam {
         ArrayList<String> lks = new ArrayList<>();
 
         Collections.addAll(lks,"gfjbkjd", "knghknjt");
+
+        String[] array = {"Java", "Love"};
+        Stream<String> stringStream = Arrays.stream(array);
+        stringStream.map(s -> s.split(" "))
+                .flatMap(Arrays::stream).distinct()
+                .collect(Collectors.toList()).forEach(System.out::println);
 
 
 
